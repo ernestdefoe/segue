@@ -5,6 +5,7 @@ namespace ErnestDefoe\Segue\Api;
 use ErnestDefoe\Segue\Settings;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
+use Flarum\Locale\TranslatorInterface;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -35,6 +36,7 @@ class IconsController implements RequestHandlerInterface
     public function __construct(
         private Settings $segue,
         private ImageManager $images,
+        private TranslatorInterface $translator,
         Factory $filesystem,
     ) {
         $this->disk = $filesystem->disk('flarum-assets');
@@ -54,22 +56,22 @@ class IconsController implements RequestHandlerInterface
         $icons = $this->segue->icons();
 
         if (! $file instanceof UploadedFileInterface || $file->getError() !== UPLOAD_ERR_OK) {
-            throw new ValidationException(['icon' => 'Choose an image to upload.']);
+            throw $this->invalid('missing');
         }
 
         if ($file->getSize() > self::MAX_BYTES) {
-            throw new ValidationException(['icon' => 'The image must be 2 MB or smaller.']);
+            throw $this->invalid('too_big');
         }
 
         if (count($icons) >= self::MAX_ICONS) {
-            throw new ValidationException(['icon' => 'Remove an icon before adding another (the limit is '.self::MAX_ICONS.').']);
+            throw $this->invalid('too_many', ['count' => self::MAX_ICONS]);
         }
 
         try {
             // Bytes only: a string could otherwise be read as a path on the server.
             $image = $this->images->read((string) $file->getStream(), BinaryImageDecoder::class);
         } catch (Throwable) {
-            throw new ValidationException(['icon' => 'That file is not an image we can use. Upload a GIF, PNG, WebP or JPEG.']);
+            throw $this->invalid('not_an_image');
         }
 
         if ($image->width() > self::MAX_SIDE || $image->height() > self::MAX_SIDE) {
@@ -85,6 +87,12 @@ class IconsController implements RequestHandlerInterface
         $this->segue->saveIcons($icons);
 
         return new JsonResponse(['icons' => $icons, 'added' => $name]);
+    }
+
+    /** @param array<string, int> $parameters */
+    private function invalid(string $reason, array $parameters = []): ValidationException
+    {
+        return new ValidationException(['icon' => $this->translator->trans('ernestdefoe-segue.api.'.$reason, $parameters)]);
     }
 
     private function delete(string $name): ResponseInterface

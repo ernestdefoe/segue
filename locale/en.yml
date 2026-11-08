@@ -35,3 +35,8 @@ ernestdefoe-segue:
       remove: Remove this icon
       upload: Add your own
       upload_help: Upload a GIF, PNG, WebP or JPEG up to 2 MB. Animated GIFs and WebPs keep moving. Icons are saved as soon as they upload; choosing one still needs Save Changes.
+  api:
+    missing: Choose an image to upload.
+    too_big: The image must be 2 MB or smaller.
+    too_many: "You can keep up to {count} icons. Remove one before adding another."
+    not_an_image: That file isn't an image Segue can use. Upload a GIF, PNG, WebP or JPEG.
