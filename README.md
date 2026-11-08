@@ -13,6 +13,8 @@ Make your forum feel like an app. Segue does two things:
   first post. Press Back and it plays in reverse. Tags glide from the tags page
   into the tag's heading the same way.
 
+![A discussion's title and avatar gliding from the list into the discussion and back, shown slowed down](screenshots/glide.gif)
+
 Inspired by the "native page transitions" technique shared on the XenForo
 community, rebuilt for Flarum: Flarum moves between pages without reloading,
 so Segue runs the browser's View Transitions for each move itself.
@@ -27,6 +29,10 @@ Pick one in the admin panel; each choice shows a live preview.
   dark mode).
 - **Your own:** upload GIF, PNG, WebP or JPEG images (up to 2 MB, 24 icons).
   Animated GIFs and WebPs keep moving.
+
+![The loading icons in light and dark mode: Ring, Orbit, Dots, Bars, Pulse and the forum's logo](screenshots/loading-icons.png)
+
+![The loading icon setting in the admin panel, with a live preview on every choice](screenshots/admin-icon-picker.png)
 
 ## Settings
 
