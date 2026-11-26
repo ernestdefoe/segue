@@ -132,6 +132,9 @@ class Transitions {
       const from = this.here;
       this.here = location.pathname;
 
+      // The browser already animated this move (Safari's swipe back, for
+      // one): a transition on top would play the move twice.
+      if ((e as PopStateEvent & { hasUAVisualTransition?: boolean }).hasUAVisualTransition) return;
       if (!this.shouldAnimate(from, this.here)) return;
 
       e.stopImmediatePropagation();
