@@ -75,7 +75,7 @@ html.segue-loading.segue-ready body::after {
 // forum.js puts .segue-vt on <html> only while a transition runs, so these
 // names never exist outside one. The header and composer stay still; the
 // title and avatar pair named by forum.js glide; everything else fades and
-// rises. --segue-k (from Head.php) scales every duration for the speed setting.
+// rises. --segue-k (from Head.php) scales every duration for the transition time setting.
 
 html.segue-vt {
   .App-header {
@@ -95,6 +95,17 @@ html.segue-vt {
 }
 .segue-vt-avatar {
   view-transition-name: segue-avatar;
+}
+
+// Elements the admin excluded: forum.js gives each one a name of its own for
+// the length of a transition, so it is pictured apart from the page and shown
+// as it is, with no fade, rise or move.
+::view-transition-group(*.segue-still),
+::view-transition-new(*.segue-still) {
+  animation: none;
+}
+::view-transition-old(*.segue-still) {
+  display: none;
 }
 
 ::view-transition-group(*) {

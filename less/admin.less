@@ -95,3 +95,24 @@
     font-size: 20px;
   }
 }
+
+// Excluded elements: the box takes the full field width, monospace for
+// selectors; lines the browser can't read are listed under it.
+.SegueExclude {
+  width: 100%;
+  min-width: 0;
+  max-width: 760px;
+
+  textarea {
+    width: 100%;
+    font-family: monospace;
+    resize: vertical;
+  }
+}
+
+.SegueExclude-invalid {
+  margin: 6px 0 0;
+  color: var(--error-color);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}

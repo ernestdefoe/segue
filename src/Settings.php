@@ -15,7 +15,8 @@ class Settings
     public const COLOR = 'ernestdefoe-segue.color';
     public const ICONS = 'ernestdefoe-segue.icons';
     public const TRANSITIONS = 'ernestdefoe-segue.transitions';
-    public const SPEED = 'ernestdefoe-segue.speed';
+    public const DURATION = 'ernestdefoe-segue.duration';
+    public const EXCLUDE = 'ernestdefoe-segue.exclude';
     public const FULL_PAGE = 'ernestdefoe-segue.full_page';
 
     /** The icons drawn in CSS, plus the forum's own logo. */
@@ -23,7 +24,14 @@ class Settings
 
     public const SIZES = ['small' => 32, 'medium' => 48, 'large' => 72];
 
-    public const SPEEDS = ['fast' => 0.7, 'normal' => 1, 'slow' => 1.4];
+    /** Transition time in seconds: the base the CSS durations are written for, and the range allowed. */
+    public const BASE_SECONDS = 0.5;
+    public const MIN_SECONDS = 0.2;
+    public const MAX_SECONDS = 2.0;
+
+    /** Excluded selectors: one per line, at most this many lines of this length. */
+    public const MAX_SELECTORS = 20;
+    public const MAX_SELECTOR_LENGTH = 200;
 
     /** Where uploaded icons live on the flarum-assets disk. */
     public const DIR = 'segue';
@@ -90,9 +98,34 @@ class Settings
         return in_array($value, ['glide', 'fade', 'off'], true) ? $value : 'glide';
     }
 
-    public function speed(): float
+    /** How long a page transition takes, in seconds, kept within the allowed range. */
+    public function duration(): float
     {
-        return self::SPEEDS[$this->settings->get(self::SPEED)] ?? 1.0;
+        $seconds = (float) $this->settings->get(self::DURATION);
+
+        return $seconds > 0 ? max(self::MIN_SECONDS, min(self::MAX_SECONDS, $seconds)) : self::BASE_SECONDS;
+    }
+
+    /** What every duration in forum.less is multiplied by (--segue-k). */
+    public function scale(): float
+    {
+        return round($this->duration() / self::BASE_SECONDS, 3);
+    }
+
+    /**
+     * The selectors of elements that stay still during a transition, one per
+     * line. Only trimmed and capped here: the browser is the judge of what a
+     * valid selector is, so forum.js tests each one and skips the bad ones.
+     *
+     * @return list<string>
+     */
+    public static function selectorLines(mixed $value): array
+    {
+        $lines = preg_split('/\R/', is_string($value) ? $value : '') ?: [];
+        $lines = array_map('trim', $lines);
+        $lines = array_filter($lines, fn (string $line) => $line !== '' && mb_strlen($line) <= self::MAX_SELECTOR_LENGTH);
+
+        return array_slice(array_values(array_unique($lines)), 0, self::MAX_SELECTORS);
     }
 
     public function fullPage(): bool

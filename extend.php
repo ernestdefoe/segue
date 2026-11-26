@@ -30,14 +30,18 @@ return [
         ->post('/segue/icons', 'segue.icons.upload', IconsController::class)
         ->delete('/segue/icons/{name:[a-z0-9]+\.(?:gif|webp)}', 'segue.icons.delete', IconsController::class),
 
+    // Keys written out, not Settings::*: reading the class here would load it
+    // while the forum boots, and fatal every request mid-deploy.
     (new Extend\Settings())
-        ->default(Settings::LOADER, true)
-        ->default(Settings::ICON, 'ring')
-        ->default(Settings::SIZE, 'medium')
-        ->default(Settings::COLOR, '')
-        ->default(Settings::ICONS, '[]')
-        ->default(Settings::TRANSITIONS, 'glide')
-        ->default(Settings::SPEED, 'normal')
-        ->default(Settings::FULL_PAGE, true)
-        ->serializeToForum('segueTransitions', Settings::TRANSITIONS),
+        ->default('ernestdefoe-segue.loader', true)
+        ->default('ernestdefoe-segue.icon', 'ring')
+        ->default('ernestdefoe-segue.size', 'medium')
+        ->default('ernestdefoe-segue.color', '')
+        ->default('ernestdefoe-segue.icons', '[]')
+        ->default('ernestdefoe-segue.transitions', 'glide')
+        ->default('ernestdefoe-segue.duration', '0.5')
+        ->default('ernestdefoe-segue.exclude', '')
+        ->default('ernestdefoe-segue.full_page', true)
+        ->serializeToForum('segueTransitions', 'ernestdefoe-segue.transitions')
+        ->serializeToForum('segueExclude', 'ernestdefoe-segue.exclude', [Settings::class, 'selectorLines']),
 ];

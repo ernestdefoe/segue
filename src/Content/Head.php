@@ -24,7 +24,7 @@ class Head
 
     public function __invoke(Document $document, ServerRequestInterface $request): void
     {
-        $vars = ['--segue-k:'.$this->segue->speed()];
+        $vars = ['--segue-k:'.$this->segue->scale()];
         $darkImage = null;
 
         if ($this->segue->loader()) {

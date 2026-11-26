@@ -6,7 +6,7 @@ const html = document.documentElement;
  * content to appear (never longer than three seconds), lets one frame paint
  * it, then fades the screen out.
  */
-export default function liftCurtain() {
+export default function liftCurtain(): void {
   if (!html.classList.contains('segue-loading')) return;
 
   const started = Date.now();

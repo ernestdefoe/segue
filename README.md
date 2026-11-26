@@ -41,7 +41,8 @@ Pick one in the admin panel; each choice shows a live preview.
 | Show a loading screen | On by default. |
 | Loading icon, size, color | See above. |
 | Page transitions | Glide (default), Fade, or Off. |
-| Transition speed | Fast, Normal, Slow. |
+| Transition time | How long one transition takes, from 0.2 to 2 seconds (0.5 by default). |
+| Keep these elements still | CSS selectors, one per line (`.TopBar`, `#my-banner`). Matching elements stay where they are while the page around them moves. A line that isn't a valid selector is skipped. |
 | Smooth full page loads | Cross-fades full page loads inside the forum (after signing in, for example) instead of blanking first. |
 
 ## Good to know
@@ -55,6 +56,10 @@ Pick one in the admin panel; each choice shows a live preview.
   JavaScript runs and comes down as soon as the page has drawn under it. If
   the forum's JavaScript ever fails, it lifts by itself after 8 seconds so the
   error message can be read. Visitors without JavaScript never see it.
+- **Late widgets.** While a page opens, Segue waits up to 0.4 seconds for
+  what the new page asks the server for (a sidebar widget's rows, say), so
+  the widget is in place when the page appears instead of pushing it down a
+  moment later.
 - **No extra requests.** Settings ride along in the page; nothing is fetched.
 - **Themes.** Colors come from your theme's CSS custom properties, so light,
   dark and custom themes all match.
@@ -70,6 +75,7 @@ php flarum cache:clear
 
 ```bash
 composer update ernestdefoe/segue
+php flarum migrate
 php flarum cache:clear
 ```
 

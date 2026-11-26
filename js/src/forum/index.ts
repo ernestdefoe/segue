@@ -2,6 +2,8 @@ import app from 'flarum/forum/app';
 import liftCurtain from './liftCurtain';
 import pageTransitions from './pageTransitions';
 
+export { default as extend } from './extend';
+
 app.initializers.add('ernestdefoe-segue', () => {
   liftCurtain();
 
